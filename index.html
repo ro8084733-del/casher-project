@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>برنامج كاشير</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>برنامج الكاشير</h1>
+
+<div class="box">
+<input type="text" id="barcode" placeholder="الباركود">
+
+<input type="text" id="name" placeholder="اسم المنتج">
+
+<input type="number" id="price" placeholder="السعر">
+
+<input type="number" id="qty" placeholder="الكمية">
+
+<button onclick="addProduct()">إضافة</button>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>الباركود</th>
+<th>المنتج</th>
+<th>السعر</th>
+<th>الكمية</th>
+<th>الإجمالي</th>
+</tr>
+</thead>
+
+<tbody id="tableBody">
+
+</tbody>
+</table>
+
+<h2 id="total">إجمالي اليوم : 0 جنيه</h2>
+
+<script src="script.js"></script>
+
+</body>
+</html>
