@@ -1,46 +1,256 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>برنامج كاشير</title>
-<link rel="stylesheet" href="style.css">
+<title>اختبار HTML - Body و H1-H6 و P</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #dff5ff;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 700px;
+        margin: auto;
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.12);
+    }
+    h1 {
+        color: #2196F3;
+        text-align: center;
+    }
+    .question {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        line-height: 1.7;
+    }
+    .option {
+        display: block;
+        background: #f2f9ff;
+        border: 1px solid #cfe8f7;
+        padding: 14px;
+        margin: 10px 0;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 18px;
+    }
+    .option:hover {
+        background: #e2f3ff;
+    }
+    button {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        background: #2196F3;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+        margin-top: 15px;
+    }
+    button:hover {
+        background: #1976D2;
+    }
+    #result {
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+        line-height: 1.8;
+    }
+    .progress {
+        text-align: center;
+        color: #555;
+        margin-bottom: 15px;
+    }
+</style>
 </head>
+
 <body>
+<div class="container">
+    <div id="nameScreen">
+        <h1>اختبار HTML 🌟</h1>
+        <p style="text-align:center;font-size:18px;">Body و H1 إلى H6 و P</p>
+        <input id="studentName" type="text" placeholder="اسم الطالب"
+               style="width:100%;box-sizing:border-box;padding:14px;font-size:18px;border:1px solid #ccc;border-radius:10px;">
+        <button onclick="startQuiz()">ابدأ الاختبار</button>
+    </div>
 
-<h1>برنامج الكاشير</h1>
+    <div id="quizScreen" style="display:none;">
+        <h1>اختبار HTML</h1>
+        <div class="progress" id="progress"></div>
+        <div class="question" id="question"></div>
+        <div id="options"></div>
+        <button id="nextBtn" onclick="nextQuestion()">التالي</button>
+    </div>
 
-<div class="box">
-<input type="text" id="barcode" placeholder="الباركود">
-
-<input type="text" id="name" placeholder="اسم المنتج">
-
-<input type="number" id="price" placeholder="السعر">
-
-<input type="number" id="qty" placeholder="الكمية">
-
-<button onclick="addProduct()">إضافة</button>
+    <div id="result" style="display:none;"></div>
 </div>
 
-<table>
-<thead>
-<tr>
-<th>الباركود</th>
-<th>المنتج</th>
-<th>السعر</th>
-<th>الكمية</th>
-<th>الإجمالي</th>
-</tr>
-</thead>
+<script>
+const questions = [
+    {
+        q: "ما هو الجزء الذي يحتوي على المحتوى الذي يظهر في صفحة الويب؟",
+        options: ["<head>", "<body>", "<title>"],
+        answer: 1
+    },
+    {
+        q: "ما الوسم المستخدم لكتابة أكبر عنوان؟",
+        options: ["<h6>", "<h1>", "<p>"],
+        answer: 1
+    },
+    {
+        q: "ما الوسم المستخدم لكتابة أصغر عنوان؟",
+        options: ["<h1>", "<h3>", "<h6>"],
+        answer: 2
+    },
+    {
+        q: "أي عنوان أكبر؟",
+        options: ["<h1>", "<h6>"],
+        answer: 0
+    },
+    {
+        q: "كم مستوى للعناوين من <h1> إلى <h6>؟",
+        options: ["4", "6", "8"],
+        answer: 1
+    },
+    {
+        q: "رتّب العناوين من الأكبر إلى الأصغر.",
+        options: [
+            "<h1> ثم <h2> ثم <h3> ثم <h4> ثم <h5> ثم <h6>",
+            "<h6> ثم <h5> ثم <h4> ثم <h3> ثم <h2> ثم <h1>",
+            "<h2> ثم <h1> ثم <h3> ثم <h4> ثم <h5> ثم <h6>"
+        ],
+        answer: 0
+    },
+    {
+        q: "ما الوسم المستخدم لكتابة فقرة؟",
+        options: ["<h1>", "<p>", "<title>"],
+        answer: 1
+    },
+    {
+        q: "ماذا يعني الوسم <p>؟",
+        options: ["عنوان", "فقرة Paragraph", "صورة"],
+        answer: 1
+    },
+    {
+        q: "أين نكتب <p> عندما نريد أن تظهر الفقرة في الصفحة؟",
+        options: ["داخل <body>", "داخل <head>", "داخل <title>"],
+        answer: 0
+    },
+    {
+        q: "أي كود صحيح لكتابة فقرة؟",
+        options: ["<p>مرحبا</p>", "<h1>مرحبا</h1>", "<title>مرحبا</title>"],
+        answer: 0
+    },
+    {
+        q: "صح أم خطأ: <p> يستخدم لكتابة الفقرات.",
+        options: ["صح", "خطأ"],
+        answer: 0
+    },
+    {
+        q: "صح أم خطأ: <h1> يستخدم لكتابة فقرة.",
+        options: ["صح", "خطأ"],
+        answer: 1
+    }
+];
 
-<tbody id="tableBody">
+let current = 0;
+let score = 0;
+let selected = null;
+let studentName = "";
 
-</tbody>
-</table>
+function startQuiz() {
+    studentName = document.getElementById("studentName").value.trim();
 
-<h2 id="total">إجمالي اليوم : 0 جنيه</h2>
+    if (!studentName) {
+        alert("اكتب اسم الطالب أولاً");
+        return;
+    }
 
-<script src="script.js"></script>
+    document.getElementById("nameScreen").style.display = "none";
+    document.getElementById("quizScreen").style.display = "block";
+    showQuestion();
+}
 
+function showQuestion() {
+    selected = null;
+    const q = questions[current];
+
+    document.getElementById("progress").textContent =
+        "السؤال " + (current + 1) + " من " + questions.length;
+
+    document.getElementById("question").textContent = q.q;
+
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+
+    q.options.forEach((option, index) => {
+        const label = document.createElement("label");
+        label.className = "option";
+
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "answer";
+        radio.value = index;
+        radio.style.marginLeft = "8px";
+
+        radio.addEventListener("change", function() {
+            selected = Number(this.value);
+        });
+
+        label.appendChild(radio);
+        label.appendChild(document.createTextNode(option));
+        optionsDiv.appendChild(label);
+    });
+
+    document.getElementById("nextBtn").textContent =
+        current === questions.length - 1 ? "إنهاء الاختبار" : "التالي";
+}
+
+function nextQuestion() {
+    if (selected === null) {
+        alert("اختار إجابة أولاً");
+        return;
+    }
+
+    if (selected === questions[current].answer) {
+        score++;
+    }
+
+    current++;
+
+    if (current < questions.length) {
+        showQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult() {
+    document.getElementById("quizScreen").style.display = "none";
+
+    const result = document.getElementById("result");
+    result.style.display = "block";
+
+    result.innerHTML =
+        "🎉 أحسنت يا " + escapeHtml(studentName) + "<br>" +
+        "⭐ درجتك " + score + " من " + questions.length + "<br><br>" +
+        "انتهى الاختبار بنجاح!";
+
+    // يمنع تعديل الإجابات بعد ظهور النتيجة.
+    current = questions.length;
+}
+
+function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+}
+</script>
 </body>
 </html>
